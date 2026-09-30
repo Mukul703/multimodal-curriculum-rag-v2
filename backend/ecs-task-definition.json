@@ -1,0 +1,90 @@
+{
+  "family": "multimodal-rag-backend",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "2048",
+  "memory": "8192",
+  "executionRoleArn": "arn:aws:iam::762009354563:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "multimodal-rag-backend",
+      "image": "762009354563.dkr.ecr.ap-south-1.amazonaws.com/multimodal-rag-backend:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "hostPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "QDRANT_URL",
+          "value": "https://9ff9dd35-1eb8-43bb-b87a-feb27a6d3815.eu-central-1-0.aws.cloud.qdrant.io"
+        },
+        {
+          "name": "QDRANT_COLLECTION",
+          "value": "COURSEERA_ALMAX_MULTIMODAL"
+        },
+        {
+          "name": "EMBEDDING_MODEL",
+          "value": "BAAI/bge-base-en-v1.5"
+        },
+        {
+          "name": "EMBEDDING_DIMENSIONS",
+          "value": "768"
+        },
+        {
+          "name": "QDRANT_DISTANCE",
+          "value": "Cosine"
+        },
+        {
+          "name": "BACKEND_HOST",
+          "value": "0.0.0.0"
+        },
+        {
+          "name": "BACKEND_PORT",
+          "value": "8000"
+        },
+        {
+          "name": "FRONTEND_ORIGINS",
+          "value": "https://coursera-mip.vercel.app"
+        },
+        {
+          "name": "SUPABASE_URL",
+          "value": "https://unbjvfzosqgmlwnmcqkp.supabase.co"
+        },
+        {
+          "name": "SUPABASE_JWKS_URL",
+          "value": "https://unbjvfzosqgmlwnmcqkp.supabase.co/auth/v1/.well-known/jwks.json"
+        },
+        {
+          "name": "GROQ_MODEL",
+          "value": "openai/gpt-oss-120b"
+        }
+      ],
+      "secrets": [
+  {
+    "name": "QDRANT_API_KEY",
+    "valueFrom": "arn:aws:secretsmanager:ap-south-1:762009354563:secret:multimodal-rag/QDRANT_API_KEY-IRl45Z"
+  },
+  {
+    "name": "SUPABASE_SECRET_KEY",
+    "valueFrom": "arn:aws:secretsmanager:ap-south-1:762009354563:secret:multimodal-rag/SUPABASE_SECRET_KEY-3EsMP7"
+  },
+  {
+    "name": "GROQ_API_KEY",
+    "valueFrom": "arn:aws:secretsmanager:ap-south-1:762009354563:secret:multimodal-rag/GROQ_API_KEY-F196vG"
+  }
+],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/multimodal-rag-backend",
+          "awslogs-region": "ap-south-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}
